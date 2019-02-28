@@ -1,26 +1,25 @@
-<%- include("partials/head.ejs") %>
+<%- include("../partials/head.ejs") %>
 
 <body>
-  <%- include("partials/nav.ejs") %>
+  <%- include("../partials/nav.ejs") %>
     <main class="container">
       <% if(products.length > 0) { %>
-      <h1>My Products</h1>
+      <h1>Products List</h1>
       <div class="row">
         <% products.forEach(product =>{ %>
         <div class=" col-4 my-3">
           <div class="card-deck ">
             <div class="card">
               <img
-                src="http:/images/background-2277_640.jpg"
+                src="<%= product.imageUrl %>"
                 class="card-img-top"
+                alt="<%= product.title %>"
               />
               <div class="card-body">
                 <h5 class="card-title"><%= product.title %></h5>
-                <h6 class="card-subtitle text mutes">£6.99</h6>
+                <h6 class="card-subtitle text mutes">£<%= product.price%></h6>
                 <p class="card-text">
-                  This is a wider card with supporting text below as a natural
-                  lead-in to additional content. This content is a little bit
-                  longer.
+                 <%= product.description%>
                 </p>
                 <button class="btn btn-primary">Add to Cart</button>
               </div>
@@ -34,5 +33,8 @@
         <% } %>
       </div>
     </main>
+    <%- include("../partials/scripts.ejs")%>
   </body>
-<%- include("partials/end.ejs") %>
+
+
+  <%- include("../partials/end.ejs") %>
