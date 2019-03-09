@@ -1,8 +1,0 @@
-{
-  "products": [
-    { "id": "9eadba49-9241-4a64-b419-8b338eb34974", "qty": 3 },
-    { "id": "1cd292ec-f2c6-403e-b567-b57ceb6d5369", "qty": 2 },
-    { "id": "81bab2a1-4c02-4a50-9a7f-bfcf6fb28468", "qty": 1 }
-  ],
-  "totalPrice": 170.80999999999997
-}
