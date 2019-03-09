@@ -3,39 +3,39 @@
 <body>
   <%- include("../partials/nav.ejs") %>
     <main class="container">
-      <% if(products.length > 0) { %>
-      <h1>Cart</h1>
-      <div class="row">
-        <% products.forEach(product =>{ %>
-        <div class=" col-4 my-3">
-          <div class="card-deck ">
-            <div class="card">
-              <img
-                src="http:/images/background-2277_640.jpg"
-                class="card-img-top"
-              />
-              <div class="card-body">
-                <h5 class="card-title"><%= product.title %></h5>
-                <h6 class="card-subtitle text mutes">£6.99</h6>
-                <p class="card-text">
-                  This is a wider card with supporting text below as a natural
-                  lead-in to additional content. This content is a little bit
-                  longer.
-                </p>
-                <button class="btn btn-primary">Add to Cart</button>
-              </div>
-            </div>
-          </div>
-        </div>
+    <% if(products) { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Title</th>
+            <th scope="col">Price</th>
+            <th scope="col">Qty</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(data =>{ %>
+          <tr>
+            <th scope="row"><%=data.product.id%></th>
+            <td><%= data.product.title%></td>
+            <td><%= data.product.price.toFixed(2)%></td>
+            <td><%= data.qty%></td>
+            
+          </tr>
           <% }) %>
-        </div>
-        <% } else { %>
-        <h1>No Products found</h1>
-        <% } %>
-      </div>
-    </main>
-    <%- include("../partials/scripts.ejs")%>
-  </body>
+        </tbody>
+        <hr />
+        <h2>Total Price: £<%= totalPrice.toFixed(2)%></h2> 
+      </table>
+      <% } else { %>
+      <h1>No Products found</h1>
+      <% } %>
+      </main>
+
+
+  <%- include("../partials/scripts.ejs")%>
+</body>
 
 
   <%- include("../partials/end.ejs") %>

@@ -1,7 +1,46 @@
-<%- include("../partials/head.ejs")%>
-<%- include("../partials/nav.ejs")%>
-<main class="container">
-  <h1>Admin/Edit Products Page</h1>
-</main>
-<%- include("../partials/scripts.ejs")%>
-<%- include("../partials/end.ejs")%>
+<%- include("../partials/head.ejs") %>
+
+<body>
+  <%- include("../partials/nav.ejs") %>
+    <main class="container">
+      <% if(products.length > 0) { %>
+      <h1>Products List</h1>
+      <div class="row">
+        <% products.forEach(product =>{ %>
+        <div class=" col-4 my-3">
+          <div class="card-deck ">
+            <div class="card">
+              <img
+                src="<%= product.imageUrl %>"
+                class="card-img-top"
+                alt="<%= product.title %>"
+              />
+              <div class="card-body">
+                <h5 class="card-title"><%= product.title %></h5>
+                <h6 class="small">Item: <%=product.id%></h6>
+                <h6 class="card-subtitle text mutes">£<%= product.price.toFixed(2)%></h6>
+                <p class="card-text">
+                <%= product.description%>
+                </p>
+                <a href="/admin/edit-product/<%=product.id%>?edit=true" class="btn btn-success">Edit</a>
+                <form action="/admin/delete-product/<%=product.id%>?edit=true" method="POST">
+                  <input type="hidden" name="id" value="<%=product.id%>">
+                  <input type="hidden" name="productPrice" value="<%=product.price%>">
+                  <button class="btn btn-danger">Delete</button`>
+                </form>
+                </div>
+            </div>
+          </div>
+        </div>
+          <% }) %>
+        </div>
+        <% } else { %>
+        <h1>No Products found</h1>
+        <% } %>
+      </div>
+    </main>
+    <%- include("../partials/scripts.ejs")%>
+  </body>
+
+
+  <%- include("../partials/end.ejs") %>

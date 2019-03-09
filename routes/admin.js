@@ -2,10 +2,15 @@ const express = require("express");
 const adminController = require("../controllers/admin");
 const router = express.Router();
 
+//NOTE all route are prefixed with "/admin"
 router.get("/add-product", adminController.getAddProduct);
-
 router.post("/add-product", adminController.postAddProduct);
 
-router.get("/edit-product", adminController.getEditProduct);
+router.get("/products", adminController.getProducts);
+
+router.get("/edit-product/:id", adminController.getEditProduct)
+router.post("/edit-product", adminController.postEditProduct)
+
+router.post("/delete-product/:id", adminController.postDeleteProduct)
 
 module.exports = router;

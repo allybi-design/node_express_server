@@ -1,7 +1,36 @@
-<%- include("../partials/head.ejs")%>
-<%- include("../partials/nav.ejs")%>
-<main class="container">
-  <h1>Edit/Admin Products Page</h1>
-</main>
-<%- include("../partials/scripts.ejs")%>
-<%- include("../partials/end.ejs")%>
+<%- include("../partials/head.ejs") %>
+
+<body>
+  <%- include("../partials/nav.ejs") %>
+
+  <main class="container my-3">
+    <div class="col-6 offset-3">
+      <form class="form-group" action="/admin/<%if (editing) {%>edit-product<%} else {%>add-product <%}%>" method="POST">
+        <label for="title">Product Title</label>
+        <input type="text" name="title" class="form-control" value="<%if (editing) {%><%=product.title%><%}%>" id="title" placeholder="Enter a Product">
+
+        <label for="imageUrl">ImageUrl</label>
+        <input type="text" name="imageUrl" class="form-control" value="<%if (editing) {%><%=product.imageUrl%><%}%>" id="imageUrl" placeholder="Enter a image Url">
+        
+        <label for="price">Price</label>
+        <input type="text" name="price" class="form-control" value="<%if (editing) {%><%=product.price.toFixed(2)%><%}%>" id="price" placeholder="Enter a Price">
+        
+        <label for="description">Description</label>
+        <textarea class="form-control" name="description" id="description" rows="5"><%if (editing) {%><%=product.description%><%}%></textarea>
+        <% if(editing) {%>
+        <input type="hidden" value="<%=product.id %>" name="id" />
+        <%}%>
+        <button type="submit" class="btn btn-success mt-3">
+        <% if (editing) { %>
+        Update Product
+        <% } else { %>
+        Add Product
+        <% } %>
+        </button>
+      </form>
+    </div>
+  </main>
+  <%- include("../partials/scripts.ejs")%>
+</body>
+
+<%- include("../partials/end.ejs") %>
