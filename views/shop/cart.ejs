@@ -2,32 +2,50 @@
 
 <body>
   <%- include("../partials/nav.ejs") %>
-    <main class="container">
+    <main class="container mt-4">
     <% if(products) { %>
-      <table class="table">
-        <thead>
+      <table class="table table-sm table-striped table-bordered ">
+        <thead class="thead-dark">
           <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Title</th>
-            <th scope="col">Price</th>
-            <th scope="col">Qty</th>
             
+            <th >Description</th>
+            <th style="text-align: center">Qty</th>
+            <th style="text-align: center">Price</th>
+            <th style="text-align: center">Sub Total</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <% products.forEach(data =>{ %>
           <tr>
-            <th scope="row"><%=data.product.id%></th>
-            <td><%= data.product.title%></td>
-            <td><%= data.product.price.toFixed(2)%></td>
-            <td><%= data.qty%></td>
             
+            <td>
+              <h5>
+                <%= data.product.title%>
+              </h5>
+              <small>ID: <%=data.product.id%></small>
+            </td>
+            <td style="text-align: center"><%= data.qty%></td>
+            <td style="text-align: center"><%= data.product.price.toFixed(2)%></td>
+            <td style="text-align: center"><%= data.product.price.toFixed(2)* data.qty%></td>
+            <td>
+              <form action="/delete-item" method="POST">
+                <input type="hidden" name="id" value="<%= data.product.id%>">
+                <input type="hidden" name="price" value="<%= data.product.price%>">
+                <button type="submit" class="btn btn-sm">
+                  <span style="color: red;">
+                    <i class="fas fa-2x fa-window-close"></i>
+                  </span>
+                </button>
+              </form>
+            </td>
           </tr>
           <% }) %>
         </tbody>
-        <hr />
-        <h2>Total Price: £<%= totalPrice.toFixed(2)%></h2> 
       </table>
+      <div class="row justify-content-end px-4">
+        <h2>Total Price: £<%= totalPrice.toFixed(2)%></h2> 
+      </div>
       <% } else { %>
       <h1>No Products found</h1>
       <% } %>

@@ -1,26 +1,5 @@
 [
   {
-    "id": "8c97e45a-aace-407b-9fba-abf48a20b8f4",
-    "title": "ac nibh",
-    "imageUrl": "http://dummyimage.com/165x100.png/ff4444/ffffff",
-    "description": "Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus. Curabitur at ipsum ac tellus semper interdum.",
-    "price": "30"
-  },
-  {
-    "id": "aa20d3b8-d47f-45ea-a123-d7491bfa25df",
-    "title": "donec",
-    "imageUrl": "http://dummyimage.com/165x100.png/dddddd/000000",
-    "description": "Sed ante. Vivamus tortor. Duis mattis egestas metus. Aenean fermentum.",
-    "price": "20"
-  },
-  {
-    "id": "e302bc78-aab8-4e81-a14b-94bb97b550f3",
-    "title": "tellus nisi eu",
-    "imageUrl": "http://dummyimage.com/165x100.png/cc0000/ffffff",
-    "description": "Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui. Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.",
-    "price": "10"
-  },
-  {
     "id": "b6a28d89-7e1f-439b-8721-c1222210d044",
     "title": "non lectus",
     "imageUrl": "http://dummyimage.com/165x100.png/5fa2dd/ffffff",

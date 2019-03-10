@@ -18,16 +18,6 @@ exports.getViewProducts = (req, res, next) => {
 	})
 }
 
-exports.getProducts = (req, res, next) => {
-	ProductModel.fetchAll(products => {
-		res.status(200).render("shop/product", {
-			products,
-			docTitle: "Product page",
-			path: "/products"
-		})
-	})
-}
-
 exports.getProductById = (req, res, next) => {
 	ProductModel.findById(req.params.id, product => {
 		res.status(200).render("shop/product-detail", {
@@ -41,24 +31,22 @@ exports.getProductById = (req, res, next) => {
 exports.getCart = (req, res, next) => {
 	CartModel.fetchAll(cart => {
 		ProductModel.fetchAll(products => {
-			const cartProducts = [];
-			for (product of products) {
-				const data = cart.products.find(
-					prod => prod.id === product.id
-				);
+			const cartProducts = []
+			products.forEach(product => {
+				const data = cart.products.find(prod => prod.id === product.id)
 				if (data) {
-					cartProducts.push({ product, qty: data.qty });
+					cartProducts.push({ product, qty: data.qty })
 				}
-			}
-			res.render('shop/cart', {
-				path: '/cart',
-				docTitle: 'Your Cart',
+			})
+			res.status(200).render("shop/cart", {
+				path: "/cart",
+				docTitle: "Your Cart",
 				products: cartProducts,
 				totalPrice: cart.totalPrice
-			});
-		});
-	});
-};
+			})
+		})
+	})
+}
 
 exports.postCart = (req, res, next) => {
 	ProductModel.findById(req.body.id, product => {
@@ -79,4 +67,9 @@ exports.getCheckout = (req, res, next) => {
 		docTitle: "Checkout",
 		path: "/checkout"
 	})
+}
+
+exports.postDeleteItemCart = (req, res, next) => {
+	CartModel.deleteByid(req.body.id, req.body.price)
+	res.status(200).redirect("/cart")
 }

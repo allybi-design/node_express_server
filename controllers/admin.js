@@ -1,5 +1,5 @@
 const ProductModel = require("../models/product")
-
+const CartModel = require("../models/cart")
 //GET - Add Product
 exports.getAddProduct = (req, res, next) => {
 	res.status(200).render("admin/edit-product", {
