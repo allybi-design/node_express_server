@@ -16,19 +16,19 @@
                 alt="<%= product.title %>"
               />
               <div class="card-body">
-                <h5 class="card-title"><%= product.title %></h5>
-                <h6 class="small">Item: <%=product.id%></h6>
-                <h6 class="card-subtitle text mutes">£<%= product.price.toFixed(2)%></h6>
+                <h5 class="card-title"><%= product.title.toUpperCase()%></h5>
+                <h6 class="small">Item: <%=product._id%></h6>
+                <h6 class="card-subtitle text mutes">£<%= parseFloat(product.price).toFixed(2)%></h6>
                 <p class="card-text">
                   <%= product.description%>
                 </p>
-                <span>
-                <a class="btn btn-outline-primary" href="products/<%=product.id%>">Details</a>
+                <div class="d-flex">
+                <a class="mx-1 btn btn-outline-primary" href="/products/<%=product._id%>">Details</a>
                 <form action="/cart" method="POST">
-                  <input type="hidden" name="id" value="<%=product.id%>">
-                  <button class="btn btn-outline-success" type="submit">add to Cart</button>
+                  <input type="hidden" name="_id" value="<%=product._id%>">
+                  <button class="mx-1 btn btn-outline-success" type="submit">Add to Cart</button>
                 </form>
-                </span>
+                </div>
               </div>
             </div>
           </div>

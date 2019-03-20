@@ -1,0 +1,24 @@
+<%- include("../partials/head.ejs") %>
+
+<body>
+  <%- include("../partials/nav.ejs") %>
+
+  <main class="container my-3">
+    <h2 class="display-4 text-center">Please Log In...</h2>
+    <div class="col-6 offset-3">
+      <form class="form-group" method="POST"  action="/user/log-in">
+        <label for="Email">Email</label>
+        <input type="email" name="email" class="form-control" id="email" />
+
+        <label for="password">Password</label>
+        <input type="password" name="pw" class="form-control" id="password" />
+        
+        <button type="submit" class="btn btn-success mt-3">Submit</button>
+      </form>
+    </div>
+  </main>
+
+  <%- include("../partials/scripts.ejs")%>
+</body>
+
+<%- include("../partials/end.ejs") %>

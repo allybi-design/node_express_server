@@ -4,19 +4,19 @@
   <%- include("../partials/nav.ejs") %>
     <main class="container my-3">
      
-      <h2>Product: <%=product.title%></h2>
-      <div class="card">
-        <div class="row">
-            <div class="col-md-4">
-              <img src="<%=product.imageUrl%>" class="card-img" alt="<%=product.title%>">
-            </div>
+  <div class="card">
+    <div class="row">
+    <div class="col-md-4">
+      <img src="<%=product.imageUrl%>" class="card-img" alt="<%=product.title%>">
+        </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h6 class="card-subtitle text mutes">£<%= product.price.toFixed(2)%></h6>
+                <h2><%=product.title.toUpperCase()%></h2>
+                <h6 class="card-subtitle text mutes">£<%= parseFloat(product.price).toFixed(2)%></h6>
                 <p class="card-text"><%=product.description%></p>
                 <form action="/cart" method="POST">
-                  <input type="hidden" name="id" value="<%=product.id%>">
-                  <button class="btn btn-outline-success" type="submit">add to Cart</button>
+                  <input type="hidden" name="_id" value="<%=product._id%>">
+                  <button class="btn btn-outline-success" type="submit">Add to Cart</button>
                 </form>
               </div>
             </div>

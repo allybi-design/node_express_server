@@ -1,38 +1,42 @@
 <header>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="/">Home</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
+  <nav class="navbar navbar-expand navbar-dark bg-dark flex-column flex-md-row bd-navbar">
+    <a class="navbar-brand <%= path === '/' ? 'active' : '' %>" href="/" >Home</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <div class="float-right">
-        <ul class="navbar-nav">
-          <li class="nav-item <%= path==='/products' ? 'active' : '' %> ">
-            <a class="nav-link" href="/products">Products</a>
-          </li>
-          <li class="nav-item <%= path==='/cart' ? 'active' : '' %>">
-            <a class="nav-link" href="/cart">Cart</a>
-          </li>
-           <li class="nav-item <%= path==='/orders' ? 'active' : '' %>">
-            <a class="nav-link" href="/orders">Orders</a>
-          </li>
-          <li class="nav-item <%= path==='/admin/add-product' ? 'active' : '' %> ">
-            <a class="nav-link" href="/admin/add-product">Add Products</a>
-          </li>
-          <li class="nav-item <%= path==='/admin/edit-product' ? 'active' : '' %> ">
-            <a class="nav-link" href="/admin/products">Edit Products</a>
-            
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+
+    <ul class="navbar-nav bd-navbar-nav flex-row">
+      <li class="nav-item">
+        <a class="nav-link <%= path === '/products' ? 'active' : '' %>" href="/products" >Products</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link <%= path === '/cart' ? 'active' : '' %>" href="/cart" >Cart</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link <%= path === '/order' ? 'active' : '' %>" href="/orders" >Orders</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link <%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product" >Add Products</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link <%= path === '/admin/product' ? 'active' : '' %>" href="/admin/products" >Edit Product</a>
+      </li>
+    </ul>
+    
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link <%= path === '/user/log-in' ? 'active' : '' %>" href="/user/log-in">Log In</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link <%= path === '/user/log-out' ? 'active' : '' %>" href="/user/log-out">Log Out</a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link <%= path === '/user/register' ? 'active' : '' %>" href="/user/register">Register</a>
+      </li>
+     
+    </ul>
+
+</nav>
 </header>

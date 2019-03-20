@@ -3,7 +3,7 @@
 <body>
   <%- include("../partials/nav.ejs") %>
     <main class="container mt-4">
-    <% if(products) { %>
+    <% if(cart.length) { %>
       <table class="table table-sm table-striped table-bordered ">
         <thead class="thead-dark">
           <tr>
@@ -16,22 +16,21 @@
           </tr>
         </thead>
         <tbody>
-          <% products.forEach(data =>{ %>
+          <% cart.forEach(item =>{ %>
           <tr>
-            
             <td>
               <h5>
-                <%= data.product.title%>
+                <%=item.productId.title%>
               </h5>
-              <small>ID: <%=data.product.id%></small>
+              <small>ID: <%=item.productId._id%></small>
             </td>
-            <td style="text-align: center"><%= data.qty%></td>
-            <td style="text-align: center"><%= data.product.price.toFixed(2)%></td>
-            <td style="text-align: center"><%= data.product.price.toFixed(2)* data.qty%></td>
+            <td style="text-align: center"><%= item.quantity%></td>
+            <td style="text-align: center"><%= item.productId.price.toFixed(2)%></td>
+            <td style="text-align: center"><%= item.productId.price*item.quantity%></td>
             <td>
               <form action="/delete-item" method="POST">
-                <input type="hidden" name="id" value="<%= data.product.id%>">
-                <input type="hidden" name="price" value="<%= data.product.price%>">
+                <input type="hidden" name="productId" value="<%= item.productId._id%>">
+                <input type="hidden" name="subTotal" value="<%= item.productId.price*item.quantity%>">
                 <button type="submit" class="btn btn-sm">
                   <span style="color: red;">
                     <i class="fas fa-2x fa-window-close"></i>
@@ -41,10 +40,19 @@
             </td>
           </tr>
           <% }) %>
+          <td>
+              <h4>TOTAL:</h4>
+            </td>
+            <td> </td>
+            <td> </td>
+            <td style="text-align: center">£<%=totalPrice.toFixed(2)%></td>
+            <td></td>
         </tbody>
       </table>
       <div class="row justify-content-end px-4">
-        <h2>Total Price: £<%= totalPrice.toFixed(2)%></h2> 
+        <form action="/orders" method="POST">
+          <button class="btn btn-primary" role="submit">Order Now!</button>
+        </form>
       </div>
       <% } else { %>
       <h1>No Products found</h1>

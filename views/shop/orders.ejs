@@ -1,7 +1,53 @@
-<%- include("../partials/head.ejs")%>
-<%- include("../partials/nav.ejs")%>
-<main class="container">
-  <h1>Orders</h1>
-</main>
-<%- include("../partials/scripts.ejs")%>
-<%- include("../partials/end.ejs")%>
+<%- include("../partials/head.ejs") %>
+
+<body>
+  <%- include("../partials/nav.ejs") %>
+    <main class="container mt-4">
+    <% if(orders.length) { %>
+      
+      <% orders.forEach(order =>{ %>
+        <h2>User: <%= order.user.name%></h2>
+        <h3>Date Ordered: <%= date%></h3>
+        
+        <table class="table table-sm table-striped table-bordered  table-responsive-sm">
+          <thead class="thead-dark">
+            <tr>
+              <th >Description</th>
+              <th style="text-align: center">Qty</th>
+              <th style="text-align: center">Price(£)</th>
+              <th style="text-align: center">Sub Total(£)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% order.products.forEach(item =>{ %>
+            <tr>
+              <td>
+                <h5><%= item.product.title%></h5>
+              </td>
+              <td style="text-align: center"><%= item.quantity%></td>
+              <td style="text-align: center"><%= item.product.price%></td>
+              <td style="text-align: center"><%= parseFloat(item.product.price.toFixed(2))* item.quantity%></td>
+            </tr>
+            <% })%>
+          </tbody>
+          <tfoot>
+            <tr class="table-primary">
+              <th ><h4>Total:</h4></th>
+              <th></th>
+              <th></th>
+              <th  style="text-align: center">£<%=order.totalPrice%></th>
+            </tr>
+          </tfoot>
+        </table>
+
+
+      <% })%>
+
+    <% } else { %>
+      <h1>No Orders found</h1>
+    <% } %>
+      </main>
+
+  <%- include("../partials/scripts.ejs")%>
+</body>
+  <%- include("../partials/end.ejs") %>
