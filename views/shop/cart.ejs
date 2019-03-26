@@ -30,6 +30,7 @@
             <td>
               <form action="/delete-item" method="POST">
                 <input type="hidden" name="productId" value="<%= item.productId._id%>">
+                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                 <input type="hidden" name="subTotal" value="<%= item.productId.price*item.quantity%>">
                 <button type="submit" class="btn btn-sm">
                   <span style="color: red;">
@@ -51,6 +52,7 @@
       </table>
       <div class="row justify-content-end px-4">
         <form action="/orders" method="POST">
+           <input type="hidden" name="_csrf" value="<%=csrfToken%>">
           <button class="btn btn-primary" role="submit">Order Now!</button>
         </form>
       </div>

@@ -1,0 +1,30 @@
+<%- include("../partials/head.ejs") %>
+
+<body>
+  <%- include("../partials/nav.ejs") %>
+
+  <main class="container my-3">
+    <h2 class="display-4 text-center">Please Log In...</h2>
+    <div class="col-6 offset-3">
+    <%- include("../partials/error.ejs")%>
+      <form class="form-group" method="POST"  action="/auth/log-in" novalidate>
+        <label for="email">Email</label>
+        <input type="email" name="email" value="<%=values.email%>"  class="form-control <%=errors.find(e => e.param === "email") ? 'border border-danger' : ''%>"
+        id="email" />
+
+        <label for="password">Password</label>
+        <input type="password" name="pw"  value="<%=values.pw%>" class="form-control <%=errors.find(e => e.param === "pw") ? 'border border-danger' : ''%>" id="password" />
+        <div class="text-center">
+         <a href="/auth/reset">Reset Password</a>
+        </div>
+        
+        <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+        <button type="submit" class="btn btn-success mt-3">Log In</button>
+      </form>
+    </div>
+  </main>
+
+  <%- include("../partials/scripts.ejs")%>
+</body>
+
+<%- include("../partials/end.ejs") %>

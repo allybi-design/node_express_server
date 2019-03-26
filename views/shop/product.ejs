@@ -24,10 +24,14 @@
                 </p>
                 <div class="d-flex">
                 <a class="mx-1 btn btn-outline-primary" href="/products/<%=product._id%>">Details</a>
+                <% if (isAuth) {%>
                 <form action="/cart" method="POST">
                   <input type="hidden" name="_id" value="<%=product._id%>">
+                  
+                  <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                   <button class="mx-1 btn btn-outline-success" type="submit">Add to Cart</button>
                 </form>
+                <%}%>
                 </div>
               </div>
             </div>

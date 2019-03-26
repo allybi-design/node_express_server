@@ -14,10 +14,14 @@
                 <h2><%=product.title.toUpperCase()%></h2>
                 <h6 class="card-subtitle text mutes">£<%= parseFloat(product.price).toFixed(2)%></h6>
                 <p class="card-text"><%=product.description%></p>
-                <form action="/cart" method="POST">
-                  <input type="hidden" name="_id" value="<%=product._id%>">
-                  <button class="btn btn-outline-success" type="submit">Add to Cart</button>
-                </form>
+                <% if (isAuth) {%>
+                  <form action="/cart" method="POST">
+                    <input type="hidden" name="_id" value="<%=product._id%>">
+                    
+                    <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                    <button class="btn btn-outline-success" type="submit">Add to Cart</button>
+                  </form>
+                <%}%>
               </div>
             </div>
         </div>

@@ -13,9 +13,9 @@ exports.getProducts = (req, res) => {
   ProductModel.find()
     .then(products => {
       res.status(200).render("shop/product", {
-        products,
         docTitle: "Products",
-        path: "/products"
+        path: "/products",
+        products
       });
     })
     .catch(err => console.log(err));
@@ -38,7 +38,6 @@ exports.getCart = (req, res, next) => {
     .populate("cart.items.productId")
     .execPopulate()
     .then(user => {
-      // console.log(user.cart.items);
       res.status(200).render("shop/cart", {
         path: "/cart",
         docTitle: "Your Cart",
@@ -70,10 +69,8 @@ exports.postItemCartDelete = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  OrderModel.find({"user.userId": req.user._id})
+  OrderModel.find({ "user.userId": req.user._id })
     .then(orders => {
-      console.log(orders);
-
       res.status(200).render("shop/orders", {
         docTitle: "Your Orders",
         path: "/orders",
@@ -95,7 +92,10 @@ exports.postAddOrder = (req, res, next) => {
           userId: req.user
         },
         products: user.cart.items.map(item => {
-          return { quantity: item.quantity, product: {...item.productId._doc} };
+          return {
+            quantity: item.quantity,
+            product: { ...item.productId._doc }
+          };
         }),
         totalPrice: user.cart.totalPrice
       });

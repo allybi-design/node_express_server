@@ -2,81 +2,88 @@ require("dotenv").config();
 
 const path = require("path");
 
-const mongoose = require("mongoose");
-mongoose.set("useCreateIndex", true);
-
 const express = require("express");
+const session = require("express-session");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const cors = require("cors");
+const conFlash = require("connect-flash");
+const csrf = require("csurf");
+const mW = require("./middleware/mW");
 
-const User = require("./models/user")
+const PORT = process.env.PORT;
+const mongoose = require("mongoose");
+mongoose.set("useCreateIndex", true);
+const MongoDBStore = require("connect-mongodb-session")(session);
 
-const { get404 } = require("./controllers/error"); //error controller
+const UserModel = require("./models/user");
+//routes
+const authRoutes = require("./routes/auth");
 const shopRoutes = require("./routes/shop");
 const adminRoutes = require("./routes/admin");
+const errorsController = require("./controllers/error");
 
 const app = express();
-const PORT = process.env.PORT;
+const store = new MongoDBStore({
+  uri: process.env.DB_CONN,
+  collection: "sessions"
+});
+const csrfProtection = csrf();
 
-//Add Middleware
-app.use(morgan("dev"));
-app.use(cors());
-
-//set handbar viewEngine
 app.set("view engine", "ejs");
 app.set("views", "views");
+app.set("view options", {
+  rmWhitespace: true
+});
 
-//set body parser
+//Add Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// routes;
+app.use(morgan("dev"));
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+    store
+  })
+);
+
+app.use(csrfProtection);
+app.use(conFlash());
+
+app.use(mW.isSession);
+
 app.use((req, res, next) => {
-  User.findById("5c90bbda514778313c83d3d8")
-    .then(user => {
-      req.user = user;
-      next();
-    })
-    .catch(err => console.log(err));
+  res.locals.isAuth = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  console.log(`CSRF Token is ${res.locals.csrfToken}`);
+  next();
 });
+
+//routes;
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
-app.use(get404);
+app.use(authRoutes);
+
+app.get("/500", errorsController.get500);
+
+app.use(errorsController.get404);
+
+//express error handlers -> will look for all error thrown
+app.use((error, req, res, next) => {
+  res.redirect("/500")
+})
 
 // connection
 mongoose
-  .connect(
-    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PW}${
-      process.env.DB_CLUSTER
-    }/nodeServerShop?retryWrites=true`,
-    { useNewUrlParser: true }
-  )
+  .connect(process.env.DB_CONN, { useNewUrlParser: true })
   .then(() => {
-    User.findOne()
-      .then(user => {
-        if (!user) {
-          const user = new User({
-            name: "Alison",
-            email: "me@here.com",
-            cart: {
-              items: [],
-              totalPrice: 0
-            }
-          });
-          user
-            .save()
-            .then(error => {
-              console.log("Connected to Mongo DB");
-            })
-            .catch(err => {
-              console.log(err);
-            });
-        }
-      })
-      .catch(err => console.log(err));
-
+    console.log("Connected to MongoDB");
     app.listen(PORT, () => {
       console.log(`Listening on http://localhost:${PORT}`);
     });
+  })
+  .catch(err => {
+    console.log(err);
   });

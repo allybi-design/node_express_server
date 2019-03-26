@@ -1,0 +1,44 @@
+<%- include("../partials/head.ejs") %>
+
+<body>
+  <%- include("../partials/nav.ejs") %>
+
+  <main class="container my-3">
+    <h2 class="display-4 text-center">Please Register below</h2>
+    <div class="col-6 offset-3">
+     <%- include("../partials/error.ejs")%>
+      <form class="form-group" method="POST"  action="/auth/register" novalidate >
+        <label for="name">Name</label>
+        <input 
+          id="name" 
+          class="form-control" 
+          type="text" 
+          name="name" 
+          value="<%=values.name%>" 
+        />
+
+        <label for="Email">Email</label>
+        <input 
+          class="form-control <%=errors.find(e => e.param === "email") ? 'border border-danger' : ''%>"
+          value="<%=values.email%>" 
+          type="email" 
+          name="email" 
+          id="email" 
+          />
+
+        <label for="password">Password</label>
+        <input type="password" name="pw" value="<%=values.pw%>" class="form-control  <%=errors.find(e => e.param === "pw") ? 'border border-danger' : ''%>" id="password" />
+
+        <label for="confirmPw">Confirm Password</label>
+        <input type="password" name="confirmPw" value="<%=values.confirmpw%>" class="form-control  <%=errors.find(e => e.param === "pw") ? 'border border-danger' : ''%>" id="confirmPw" />
+        
+        <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+        <button type="submit" class="btn btn-success mt-3">Register</button>
+      </form>
+    </div>
+  </main>
+
+  <%- include("../partials/scripts.ejs")%>
+</body>
+
+<%- include("../partials/end.ejs") %>

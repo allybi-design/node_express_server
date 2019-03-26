@@ -1,0 +1,7 @@
+<%if (errors.length > 0) {%>
+  <% errors.forEach(error =>{ %>
+    <div class="alert alert-danger text-center" role="alert">
+        <%=`${error.msg}`%>
+        </div>
+  <%})%>
+<%}%>

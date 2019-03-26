@@ -10,32 +10,39 @@
       <li class="nav-item">
         <a class="nav-link <%= path === '/products' ? 'active' : '' %>" href="/products" >Products</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link <%= path === '/cart' ? 'active' : '' %>" href="/cart" >Cart</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= path === '/order' ? 'active' : '' %>" href="/orders" >Orders</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product" >Add Products</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= path === '/admin/product' ? 'active' : '' %>" href="/admin/products" >Edit Product</a>
-      </li>
+      <% if (isAuth) {%>
+        <li class="nav-item">
+          <a class="nav-link <%= path === '/cart' ? 'active' : '' %>" href="/cart" >Cart</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path === '/order' ? 'active' : '' %>" href="/orders" >Orders</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product" >Add Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path === '/admin/product' ? 'active' : '' %>" href="/admin/products" >Edit Product</a>
+        </li>
+      <%}%>
     </ul>
     
     <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+    <% if (isAuth) {%>
       <li class="nav-item">
-        <a class="nav-link <%= path === '/user/log-in' ? 'active' : '' %>" href="/user/log-in">Log In</a>
+        <a class="nav-link <%= path === '/auth/log-out' ? 'active' : '' %>" ><%=userName%></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link <%= path === '/user/log-out' ? 'active' : '' %>" href="/user/log-out">Log Out</a>
+        <a class="nav-link <%= path === '/auth/log-out' ? 'active' : '' %>" href="/auth/log-out">Log Out</a>
       </li>
-      
+    <%}%>
+    <% if (!isAuth) {%>
       <li class="nav-item">
-        <a class="nav-link <%= path === '/user/register' ? 'active' : '' %>" href="/user/register">Register</a>
+        <a class="nav-link <%= path === '/auth/log-in' ? 'active' : '' %>" href="/auth/log-in">Log In</a>
       </li>
-     
+      <li class="nav-item">
+        <a class="nav-link <%= path === '/auth/register' ? 'active' : '' %>" href="/auth/register">Register</a>
+      </li>
+     <%}%>
     </ul>
 
 </nav>

@@ -6,33 +6,39 @@ const userSchema = new Schema({
   name: {
     type: String,
     required: true,
-    trim: true
   },
   email: {
     type: String,
     required: true,
     unique: true
   },
+  password: {
+    type: String,
+    required: true
+  },
+  resetToken: String,
+  resetTokenExpiration: Date,
   cart: {
     items: [
       {
         productId: {
           type: Schema.Types.ObjectId,
-          ref: "Product",
-          required: true
+          ref: "Product"
         },
         quantity: {
-          type: Number,
-          required: true
+          type: Number
         }
       }
     ],
     totalPrice: {
-      type: Number,
-      required: true
+      type: Number
     }
   }
-});
+}, {
+  timestamps: {
+    createdAt: "createdAt"
+  }
+})
 
 userSchema.methods.addToCart = function(product) {
   let price = parseFloat(product.price);
@@ -69,52 +75,52 @@ userSchema.methods.addToCart = function(product) {
 };
 
 userSchema.methods.getCart = function() {
-    const itemIds = this.cart.items.map(item => {
-      return item.productId;
-    });
-    console.log(itemIds);
-    return this.cart.itemIds
-      .findById( this.cart.items.productId )
-      .toArray()
-      .then(products => {
-        return products.map(product => {
-          return {
-            ...product,
-            quantity: this.cart.items.find(item => {
-              return item.productId.toString() === product._id.toString();
-            }).quantity
-          };
-        });
+  const itemIds = this.cart.items.map(item => {
+    return item.productId;
+  });
+  console.log(itemIds);
+  return this.cart.itemIds
+    .findById(this.cart.items.productId)
+    .toArray()
+    .then(products => {
+      return products.map(product => {
+        return {
+          ...product,
+          quantity: this.cart.items.find(item => {
+            return item.productId.toString() === product._id.toString();
+          }).quantity
+        };
       });
-}
+    });
+};
 
 userSchema.methods.deleteFromCart = function(productId, subTotal) {
-    const filteredItems = this.cart.items.filter(item => {
-      return item.productId.toString() !== productId.toString();
-    });
+  const filteredItems = this.cart.items.filter(item => {
+    return item.productId.toString() !== productId.toString();
+  });
   if (filteredItems.length) {
     this.cart = {
       items: [...filteredItems],
       totalPrice: this.cart.totalPrice - subTotal
-    } 
+    };
   } else {
     this.cart = {
       items: [],
       totalPrice: 0
-    }
+    };
   }
 
-    return this.save()
-}
+  return this.save();
+};
 
-userSchema.methods.clearCart = function () {
+userSchema.methods.clearCart = function() {
   this.cart = {
-    items:[],
+    items: [],
     totalPrice: 0
-    }
+  };
 
-  return this.save()
-}
+  return this.save();
+};
 
 module.exports = mongoose.model("User", userSchema);
 
