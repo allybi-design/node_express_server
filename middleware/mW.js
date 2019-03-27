@@ -80,27 +80,27 @@ exports.isAuth = (req, res, next) => {
   next();
 };
 
-exports.isSession = (req, res, next) => {
-  if (!req.session.user) {
-    return next();
-  }
-  UserModel.findById(req.session.user._id)
-    .then(user => {
-      if (!user) {
-        return next();
-      }
-      req.user = user;
-      res.locals.userName = user.name;
-      next();
-    })
-    .catch(err => {
-      console.log(err);
-    });
-};
+// exports.isSession = (req, res, next) => {
+//   if (!req.session.user) {
+//     return next();
+//   }
+//   UserModel.findById(req.session.user._id)
+//     .then(user => {
+//       if (!user) {
+//         return next();
+//       }
+//       req.user = user;
+//       res.locals.userName = user.name;
+//       next();
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     });
+// };
 
-exports.setLocals = (req, res, next) => {
-  console.log("fail here");
-  res.locals.isAuth = req.session.isAuth;
-  res.locals.csrfToken = req.csrfToken();
-  next();
-};
+// exports.setLocals = (req, res, next) => {
+//   console.log("fail here");
+//   res.locals.isAuth = req.session.isAuth;
+//   res.locals.csrfToken = req.csrfToken();
+//   next();
+// };

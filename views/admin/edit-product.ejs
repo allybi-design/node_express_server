@@ -6,14 +6,18 @@
   <main class="container my-3">
     <div class="col-6 offset-3">
     <%- include("../partials/error.ejs")%>
-      <form class="form-group" method="POST" action="/admin/<%if (editing) {%>edit-product<%} else {%>add-product <%}%>" novalidation>
+      <form class="form-group" method="POST" action="/admin/<%if (editing) {%>edit-product<%} else {%>add-product <%}%>" >
         <label for="title">Product Title</label>
         <input 
           id="title" 
           type="text" 
           name="title" 
           class="form-control <%=errors.find(e => e.param === 'title') ? 'border border-danger' : '' %>"
-          value="<%if (editing) {%><%=product.title%><%} else {%><%=values.title%><%}%>" 
+          value="<%if (editing) {%>
+                  <%=product.title%>
+                <%} else {%>
+                  <%=value.title%>
+                <%}%>" 
         />
 
         <label for="imageUrl">ImageUrl</label>
@@ -22,7 +26,11 @@
           type="text" 
           name="imageUrl" 
           class="form-control <%=errors.find(e => e.param === 'imageUrl') ? 'border border-danger' : ''%>"  
-          value="<%if (editing) {%><%=product.imageUrl%><%} else {%><%=values.imageUrl%><%}%>"
+          value="<%if (editing) {%>
+                  <%=product.imageUrl%>
+                  <%} else {%>
+                  <%=value.imageUrl%>
+                <%}%>" 
         />
         
         <label for="price">Price</label>
@@ -33,16 +41,20 @@
           min="0" 
           name="price" 
           class="form-control <%=errors.find(e => e.param === 'price') ? 'border border-danger' : ''%>" 
-          value="<%if (editing) {%><%=product.price%><%} else {%><%=values.price%><%}%>"
+          value="<%if (editing) {%>
+                  <%=product.price%>
+                  <%} else {%>
+                  <%=value.price%>
+                <%}%>" 
         />
         
         <label for="description">Description</label>
         <textarea id="description" name="description" rows="5" class="form-control <%=errors.find(e => e.param === 'description') ? 'border border-danger' : ''%>">
-          <%if (editing) {%>
-            <%=product.description%>
+        <%if (editing) {%>
+          <%=product.description%>
           <%} else {%>
-            <%=values.description%>
-          <%}%>
+          <%=value.description%>
+        <%}%>
         </textarea>
         
         <% if (editing) {%>

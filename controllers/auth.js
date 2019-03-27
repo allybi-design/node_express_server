@@ -63,7 +63,6 @@ exports.postLogIn = (req, res, next) => {
             });
           })
           .catch(err => {
-            console.log(err);
             return res.redirect("auth/log-in");
           });
       } else {
@@ -138,8 +137,10 @@ exports.postRegister = (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log("ERROR = ", err);
-      res.status(200).redirect("/");
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      error.msg = "an Error message";
+      return next(error);
     });
 };
 
@@ -182,7 +183,12 @@ exports.postReset = (req, res, next) => {
               `
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        error.msg = "an Error message";
+        return next(error);
+      });
   });
 };
 
@@ -203,7 +209,12 @@ exports.getPasswordReset = (req, res, next) => {
         token: req.params.token
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      error.msg = "an Error message";
+      return next(error);
+    });
 };
 
 exports.postPasswordReset = (req, res, next) => {
@@ -223,5 +234,10 @@ exports.postPasswordReset = (req, res, next) => {
       user.save();
       res.redirect("/products");
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      error.msg = "an Error message";
+      return next(error);
+    });;
 };

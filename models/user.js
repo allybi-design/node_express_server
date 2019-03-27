@@ -123,18 +123,3 @@ userSchema.methods.clearCart = function() {
 };
 
 module.exports = mongoose.model("User", userSchema);
-
-// const getDb = require("../util/connection").getDb;
-// const ObjectId = require("mongodb").ObjectID;
-// const bcrypt = require("bcryptjs");
-// const salt = bcrypt.genSaltSync(10);
-// require("datejs");
-
-// exports.UserModel = class User {
-//   constructor(userName, email, pw, cart, id) {
-//     this.email = email;
-//     this.name = userName;
-//     this.pw = bcrypt.hashSync(pw, salt);
-//     this.cart = cart;
-//     this._id = id;
-//   }

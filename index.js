@@ -9,13 +9,17 @@ const morgan = require("morgan");
 const conFlash = require("connect-flash");
 const csrf = require("csurf");
 const mW = require("./middleware/mW");
+const UserModel = require("./models/user");
 
 const PORT = process.env.PORT;
+
 const mongoose = require("mongoose");
 mongoose.set("useCreateIndex", true);
+mongoose.set("useFindAndModify", false);
+mongoose.set("useNewUrlParser", true )
+
 const MongoDBStore = require("connect-mongodb-session")(session);
 
-const UserModel = require("./models/user");
 //routes
 const authRoutes = require("./routes/auth");
 const shopRoutes = require("./routes/shop");
@@ -27,7 +31,6 @@ const store = new MongoDBStore({
   uri: process.env.DB_CONN,
   collection: "sessions"
 });
-const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -49,17 +52,32 @@ app.use(
   })
 );
 
-app.use(csrfProtection);
+app.use(csrf());
 app.use(conFlash());
 
-app.use(mW.isSession);
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+  UserModel.findById(req.session.user._id)
+    .then(user => {
+      if (!user) {
+        return next();
+      }
+      req.user = user;
+      res.locals.userName = user.name;
+      next();
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
+}); //get User from session
 
 app.use((req, res, next) => {
   res.locals.isAuth = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
-  console.log(`CSRF Token is ${res.locals.csrfToken}`);
   next();
-});
+}); //set lOCAL crsf Token & user NaME
 
 //routes;
 app.use("/admin", adminRoutes);
@@ -72,12 +90,14 @@ app.use(errorsController.get404);
 
 //express error handlers -> will look for all error thrown
 app.use((error, req, res, next) => {
-  res.redirect("/500")
-})
+  console.log(error);
+  req.error = error;
+  res.redirect("/500");
+});
 
 // connection
 mongoose
-  .connect(process.env.DB_CONN, { useNewUrlParser: true })
+  .connect(process.env.DB_CONN)
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(PORT, () => {
