@@ -2,7 +2,7 @@ exports.get500 = (req, res, next) => {
   res.status(500).render("errors/500", {
     docTitle: "Error 500",
     path: "/500",
-    errorMsg: "OOOPPPSSS!!!",
+    error: req.error,
     isAuth: req.session.isLoggedIn
   });
 };

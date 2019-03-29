@@ -6,7 +6,7 @@
   <main class="container my-3">
     <div class="col-6 offset-3">
     <%- include("../partials/error.ejs")%>
-      <form class="form-group" method="POST" action="/admin/<%if (editing) {%>edit-product<%} else {%>add-product <%}%>" >
+      <form class="form-group" method="POST" autocomplete="on" enctype="multipart/form-data" action="/admin/<%if (editing) {%>edit-product<%} else {%>add-product <%}%>" >
         <label for="title">Product Title</label>
         <input 
           id="title" 
@@ -20,7 +20,7 @@
                 <%}%>" 
         />
 
-        <label for="imageUrl">ImageUrl</label>
+        <!--<label for="imageUrl">ImageUrl</label>
         <input 
           id="imageUrl" 
           type="text" 
@@ -31,7 +31,12 @@
                   <%} else {%>
                   <%=value.imageUrl%>
                 <%}%>" 
-        />
+        />-->
+        <p class="mb-2">Choose a File...</p>
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" name="image" id="customFile">
+          <label class="custom-file-label" for="customFile" >Choose file</label>
+        </div>
         
         <label for="price">Price</label>
         <input 

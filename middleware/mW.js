@@ -6,21 +6,6 @@ exports.validateProduct = [
     .trim()
     .isString()
     .isLength({ min: 5, max: 40 }),
-  body("imageUrl", "Image must be valid address")
-    .trim()
-    .isURL({
-      protocols: ["http", "https", "ftp"],
-      require_tld: true,
-      require_protocol: false,
-      require_host: true,
-      require_valid_protocol: true,
-      allow_underscores: false,
-      host_whitelist: false,
-      host_blacklist: false,
-      allow_trailing_dot: false,
-      allow_protocol_relative_urls: false,
-      disallow_auth: false
-    }),
   body("price", "Price need to be Currency figure").isCurrency(),
   body("description", "Description length Error")
     .trim()
@@ -64,7 +49,7 @@ exports.validateRegister = [
     .trim()
     .custom((value, { req }) => {
       if (value !== req.body.pw) {
-        throw new Error("Password not matched");
+        throw new Error("Passwords do not matched");
       }
       return true;
     }),
@@ -80,27 +65,26 @@ exports.isAuth = (req, res, next) => {
   next();
 };
 
-// exports.isSession = (req, res, next) => {
-//   if (!req.session.user) {
-//     return next();
-//   }
-//   UserModel.findById(req.session.user._id)
-//     .then(user => {
-//       if (!user) {
-//         return next();
-//       }
-//       req.user = user;
-//       res.locals.userName = user.name;
-//       next();
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
+exports.isSession = (req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+  UserModel.findById(req.session.user._id)
+    .then(user => {    
+      if (!user) {
+        return next();
+      }
+      req.user = user;
+      res.locals.userName = user.name;
+      next();
+    })
+    .catch(err => {
+      next(new Error(err));
+    });
+};
 
-// exports.setLocals = (req, res, next) => {
-//   console.log("fail here");
-//   res.locals.isAuth = req.session.isAuth;
-//   res.locals.csrfToken = req.csrfToken();
-//   next();
-// };
+exports.setLocals = (req, res, next) => {
+  res.locals.isAuth = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+};
