@@ -6,17 +6,13 @@
       <% if(products.length > 0) { %>
       <h1>Products List</h1>
       <div class="row">
-        <% products.forEach(product =>{ %>
+        <% products.forEach((product) =>{ %>
         <div class=" col-4 my-3">
           <div class="card-deck ">
             <div class="card">
-              <img
-                src="/<%= product.imageUrl %>"
-                class="card-img-top"
-                alt="<%= product.title %>"
-              />
+             <img src="/<%=product.imageUrl%>" class="card-img-top" alt="<%=product.title%>">
               <div class="card-body">
-                <h5 class="card-title"><%= product.title.toUpperCase()%></h5>
+                <h5 class="card-title"><%=product.title%></h5>
                 <h6 class="small">Item: <%=product._id%></h6>
                 <h6 class="card-subtitle text mutes">£<%= parseFloat(product.price).toFixed(2)%></h6>
                 <p class="card-text">
@@ -43,6 +39,27 @@
         <h1>No Products found</h1>
         <% } %>
       </div>
+      <nav>
+        <ul class="pagination justify-content-center">
+         <li class="page-item <%=hasPrev === false ? 'disabled' : '' %>">
+          <a class="page-link" href="/products/?page=<%=prevPage%>" tabindex="-1"
+            >Previous
+          </a>
+        </li>
+        <% for (i=1; i <= pages; i++) { %>
+          <li class="page-item <%=page === i ? 'active' : '' %>">
+            <a class="page-link"  href="/products/?page=<%=i%>">
+              <%=i%>
+            </a>
+          </li>
+        <%}%>
+        <li class="page-item <%=hasNext === false ? 'disabled' : '' %>">
+          <a class="page-link" href="/products/?page=<%=nextPage%>">
+            Next
+          </a>
+        </li>
+      </ul>
+    </nav>
     </main>
     <%- include("../partials/scripts.ejs")%>
   </body>

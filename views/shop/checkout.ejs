@@ -4,15 +4,27 @@
   <%- include("../partials/nav.ejs") %>
     <main class="container mt-4">
     <% if(cart.length) { %>
+      <h4>Customer:<br/>
+        <%=user.name.toUpperCase()%>
+      </h4>
+      <address>
+      Deliver Address: <br />
+      1355 Market St, <br/>
+      Suite 900<br/>
+      Manchester<br/>
+      M1 2BC<br/>
+      <br/>
+      Tel: +44 (0123) 456-7890<br/>
+      </address>
+      <h4>Order Date:<%= date%></h4>
+      
       <table class="table table-sm table-striped table-bordered ">
         <thead class="thead-dark">
           <tr>
-            
             <th >Description</th>
             <th style="text-align: center">Qty</th>
             <th style="text-align: center">Price</th>
             <th style="text-align: center">Sub Total</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -27,42 +39,36 @@
             <td style="text-align: center"><%= item.quantity%></td>
             <td style="text-align: center"><%= item.productId.price.toFixed(2)%></td>
             <td style="text-align: center"><%= item.productId.price*item.quantity%></td>
-            <td>
-              <form action="/delete-item" method="POST">
-                <input type="hidden" name="productId" value="<%= item.productId._id%>">
-                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
-                <input type="hidden" name="subTotal" value="<%= item.productId.price*item.quantity%>">
-                <button type="submit" class="btn btn-sm">
-                  <span style="color: red;">
-                    <i class="fas fa-2x fa-window-close"></i>
-                  </span>
-                </button>
-              </form>
-            </td>
           </tr>
           <% }) %>
           <td>
-              <h4>TOTAL:</h4>
-            </td>
-            <td> </td>
-            <td> </td>
-            <td style="text-align: center">£<%=totalPrice.toFixed(2)%></td>
-            <td></td>
+            <h4>TOTAL:</h4>
+          </td>
+          <td> </td>
+          <td> </td>
+          <td style="text-align: center">£<%=totalPrice.toFixed(2)%></td>
+          
         </tbody>
       </table>
-      
-      <a href="/checkout">
-        <button class="btn btn-primary">Check Out</button>
-      </a>
-     
+      <form action="/addorder" method="post">
+        <script
+          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="pk_test_hmRlq9RYmC0YDb2s2hNhy8Ii00aIyNw1QF"
+          data-amount="<%=cart.totalPrice*100%>"
+          data-name="NodeServerShop"
+          data-description="Click 'Pay' to autherise"
+          data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+          data-locale="auto"
+          data-currency="gbp">  
+        </script>
+      </form>
+  
       <% } else { %>
       <h1>No Products found</h1>
       <% } %>
       </main>
 
-
   <%- include("../partials/scripts.ejs")%>
 </body>
-
 
   <%- include("../partials/end.ejs") %>

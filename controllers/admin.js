@@ -30,43 +30,43 @@ exports.getAddProduct = async (req, res, next) => {
 };
 
 //POST- Add Product
-exports.postAddProduct = async (req, res, next) => {
-  try {
-    const errors = validationResult(req);
-    // check for any Errors
-    if (!errors.isEmpty()) {
-      // if there ARE Errors
-      console.log(errors.array());
-      return res.status(422).render("admin/edit-product", {
-        docTitle: "Add Product",
-        path: "/admin/add-product",
-        editing: false,
-        errors: errors.array(),
-        value: {
-          title: req.body.title,
-          price: req.body.price,
-          description: req.body.description,
-          userId: req.user._id // could remove ._id
-        }
-      });
-    }
-    const imageUrl = await req.file.path.replace("\\", "/");
-
-    const product = await new ProductModel({
-      title: req.body.title,
-      imageUrl,
-      price: req.body.price,
-      description: req.body.description,
-      userId: req.user._id // could remove ._id
+exports.postAddProduct = (req, res, next) => {
+  // check for any Errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // if there ARE Errors
+    return res.status(422).render("admin/edit-product", {
+      docTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      errors: errors.array(),
+      value: {
+        title: req.body.title,
+        price: req.body.price,
+        description: req.body.description,
+        userId: req.user._id // could remove ._id
+      }
     });
-    await product.save();
-    res.redirect("/products");
-  } catch (err) {
-    const error = new Error();
-    error.httpStatusCode = 500;
-    error.msg = "an Error message";
-    return next(error);
   }
+
+  const product = new ProductModel({
+    title: req.body.title,
+    imageUrl: req.file.path.replace("\\", "/"),
+    price: req.body.price,
+    description: req.body.description,
+    userId: req.user._id // could remove ._id
+  });
+  product
+    .save()
+    .then(() => {
+      res.redirect("/products");
+    })
+    .catch(err => {
+      const error = new Error();
+      error.httpStatusCode = 500;
+      error.msg = `ERROR - ${err}`;
+      return next(error);
+    });
 };
 
 exports.getProducts = async (req, res, next) => {
@@ -80,7 +80,7 @@ exports.getProducts = async (req, res, next) => {
   } catch (err) {
     const error = new Error(err);
     error.httpStatusCode = 500;
-    error.msg = "an Error message";
+    error.msg = `ERROR - ${err}`;
     return next(error);
   }
 };
@@ -103,7 +103,7 @@ exports.getEditProduct = async (req, res, next) => {
   } catch (err) {
     const error = new Error(err);
     error.httpStatusCode = 500;
-    error.msg = "an Error message";
+    error.msg = `ERROR - ${err}`;
     return next(error);
   }
 };
@@ -141,19 +141,17 @@ exports.postEditProduct = async (req, res, next) => {
   } catch (err) {
     const error = new Error(err);
     error.httpStatusCode = 500;
-    error.msg;
+    error.msg = `ERROR - ${err}`;
     return next(error);
   }
 };
 
-exports.postDeleteProduct = async (req, res, next) => {
-  try {
-    await ProductModel.findByIdAndDelete(req.body._id);
-    res.redirect("/admin/products");
-  } catch (err) {
-    const error = new Error(err);
-    error.httpStatusCode = 500;
-    error.msg;
-    return next(error);
-  }
+exports.deleteProduct = (req, res, next) => {
+  ProductModel.findOneAndDelete({_id:req.params.productId})
+    .then(result => {
+      res.status(200).json({ msg: "Product Deleted" });
+    })
+    .catch(err => {
+      res.status(500).json({ msg: "OOppss... something went wrong" });
+    });
 };

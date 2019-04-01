@@ -7,7 +7,7 @@
       <h1>Products List</h1>
       <div class="row">
         <% products.forEach(product =>{ %>
-        <div class=" col-4 my-3">
+        <div class=" col-4 my-3 <%=product._id%>" >
           <div class="card-deck ">
             <div class="card">
               <img
@@ -22,14 +22,11 @@
                 <p class="card-text">
                 <%= product.description%>
                 </p>
-                <div class="d-flex">
-                  <a href="/admin/edit-product/<%=product._id%>?edit=true" class="btn btn-success">Edit</a>
-                  <form action="/admin/delete-product/<%=product._id%>" method="POST">
-                    <input type="hidden" name="_id" value="<%=product._id%>">
-                    <input type="hidden" name="productPrice" value="<%=product.price%>">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button class="mx-1 btn btn-danger">Delete</button>
-                  </form>
+                <div id="submit" class="d-flex">
+                  <a href="/admin/edit-product/<%=product._id%>?edit=true" class="btn btn-success">Edit</a>  
+                  <input type="hidden" name="_id" value="<%=product._id%>">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button id="delProduct" onclick="deleteProduct(this)" class="mx-1 btn btn-danger">Delete</button>
                 </div>
                 </div>
             </div>
@@ -43,6 +40,7 @@
       </div>
     </main>
     <%- include("../partials/scripts.ejs")%>
+    <script src="/scripts/admin.js"></script>
   </body>
 
 

@@ -10,7 +10,7 @@ const morgan = require("morgan");
 const conFlash = require("connect-flash");
 const csrf = require("csurf");
 const mW = require("./middleware/mW");
-// const UserModel = require("./models/user");
+const UserModel = require("./models/user");
 const uuidv4 = require("uuid/v4");
 
 const PORT = process.env.PORT;
@@ -27,6 +27,7 @@ const authRoutes = require("./routes/auth");
 const shopRoutes = require("./routes/shop");
 const adminRoutes = require("./routes/admin");
 const errorsController = require("./controllers/error");
+const shopController = require("./controllers/shop");
 
 const app = express();
 const store = new MongoDBStore({
@@ -82,12 +83,19 @@ app.use(
   })
 );
 
-app.use(csrf());
 app.use(conFlash());
 
-app.use(mW.isSession); //set lOCAL crsf Token & user NaME
+//check isAuth
+app.use(mW.setIsAuth);
 
-app.use(mW.setLocals); //get User from session
+//check session
+app.use(mW.isSession);
+
+app.post("/addorder", mW.isAuth, shopController.postAddOrder); //NB MUST CATCH BEFOR CSRF TRAP
+
+//set CSRF TOKEN
+app.use(csrf());
+app.use(mW.setCsrfToken);
 
 //routes;
 app.use("/admin", adminRoutes);

@@ -23,10 +23,10 @@ router.post(
   adminController.postEditProduct
 );
 
-router.post(
-  "/delete-product/:id",
+router.delete(
+  "/delete-product/:productId",
   mW.isAuth,
-  adminController.postDeleteProduct
+  adminController.deleteProduct
 );
 
 module.exports = router;

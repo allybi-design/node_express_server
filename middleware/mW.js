@@ -9,7 +9,7 @@ exports.validateProduct = [
   body("price", "Price need to be Currency figure").isCurrency(),
   body("description", "Description length Error")
     .trim()
-    .isLength({ min: 10, max: 200 }),
+    .isLength({ min: 10, max: 1000 }),
   (req, res, next) => {
     next();
   }
@@ -70,7 +70,7 @@ exports.isSession = (req, res, next) => {
     return next();
   }
   UserModel.findById(req.session.user._id)
-    .then(user => {    
+    .then(user => {
       if (!user) {
         return next();
       }
@@ -79,12 +79,17 @@ exports.isSession = (req, res, next) => {
       next();
     })
     .catch(err => {
+      console.log("Failed Session Validation");
       next(new Error(err));
     });
 };
 
-exports.setLocals = (req, res, next) => {
+exports.setIsAuth = (req, res, next) => {
   res.locals.isAuth = req.session.isLoggedIn;
+  next();
+};
+
+exports.setCsrfToken = (req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
   next();
 };

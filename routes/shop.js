@@ -13,11 +13,12 @@ router.get("/products/:_id", shopController.getProductById);
 router.get("/cart", mW.isAuth, shopController.getCart);
 router.post("/cart", mW.isAuth, shopController.postCart);
 
+router.get("/checkout", mW.isAuth, shopController.getCheckOut);
+
 router.post("/delete-item", mW.isAuth, shopController.postItemCartDelete);
 
 router.get("/orders", mW.isAuth, shopController.getOrders);
-router.post("/orders", mW.isAuth, shopController.postAddOrder);
 
-router.get("/invoice/:orderId", shopController.getInvoice)
+router.get("/invoice/:orderId", shopController.getInvoice);
 
 module.exports = router;
