@@ -19,6 +19,10 @@ const userSchema = new Schema(
     },
     resetToken: String,
     resetTokenExpiration: Date,
+    isLoggedIn: {
+      type: Boolean,
+      default: false
+    },
     cart: {
       items: [
         {
@@ -44,13 +48,10 @@ const userSchema = new Schema(
 );
 
 userSchema.methods.addToCart = function(product) {
-  let price = parseFloat(product.price);
+  let price = product.price
   let upDatedTotalPrice = 0;
-  let totalPrice = this.cart.totalPrice;
-  if (!totalPrice) {
-    totalPrice = 0;
-  }
-
+  let totalPrice = this.cart.totalPrice || 0
+  
   // is product in cart already??? return Index or -1
   const Index = this.cart.items.findIndex(item => {
     return String(item.productId) === String(product._id);
@@ -74,7 +75,8 @@ userSchema.methods.addToCart = function(product) {
     totalPrice: upDatedTotalPrice
   };
 
-  return this.save();
+  this.save();
+  return this.cart
 };
 
 userSchema.methods.getCart = function() {
