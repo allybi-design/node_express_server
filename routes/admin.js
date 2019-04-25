@@ -5,13 +5,8 @@ const adminController = require("../controllers/admin");
 const mW = require("../middleware/mW");
 
 // NOTE all route are prefixed with "/admin"
-// router.get("/add-product", mW.isAuth, adminController.getAddProduct);
-// router.post(
-//   "/add-product",
-//   mW.isAuth,
-//   mW.validateProduct,
-//   adminController.postAddProduct
-// );
+// router.get("/add-product", adminController.getAddProduct);
+// router.post("/add-product",  mW.validateProduct,  adminController.postAddProduct);
 
 // router.get("/products", mW.isAuth, adminController.getProducts);
 

@@ -6,7 +6,7 @@ const path = require("path");
 const dateFormat = require("dateformat");
 const hbs = require("handlebars");
 const puppeteer = require("puppeteer");
-const maxPerPage = 3;
+const maxPerPage = 4;
 
 const ProductModel = require("../models/product");
 const OrderModel = require("../models/orders");
@@ -36,7 +36,6 @@ exports.getProducts = async (req, res, next) => {
 };
 
 exports.getProductById = async (req, res, next) => {
-  console.log("product ased for");
   try {
     const product = await ProductModel.findById(req.params.id);
     res.status(200).send({ product });
@@ -47,17 +46,73 @@ exports.getProductById = async (req, res, next) => {
   }
 };
 
-exports.postAddToCart = async (req, res, next) => {
-  const product = await ProductModel.findById(req.body.productId);
-  if (!product) {
-    return res.status(400).send({ msg: "Product Not found" });
+exports.postAddItemToCart = async (req, res, next) => {
+  try {
+    const product = await ProductModel.findById(req.body.product._id);
+    if (!product) {
+      return res.status(400).send({ msg: "Product Not found" });
+    }
+    const user = await UserModel.findById(req.body.userId);
+    if (!user) {
+      return res.status(400).send({ msg: "No User found" });
+    }
+    const cart = await user.addItem(product);
+    return res.status(200).send({ cart });
+  } catch (err) {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    error.msg;
+    return next(error);
   }
-  const user = await UserModel.findById(req.body.userId);
-  if (!user) {
-    return res.status(400).send({ msg: "No User found" });
+};
+
+exports.postDeleteItemInCart = async (req, res, next) => {
+  try {
+    const user = await UserModel.findById(req.body.userId);
+    if (!user) {
+      return res.status(400).send({ msg: "No User found" });
+    }
+    const cart = await user.deleteItem(req.body.productId, req.body.subTotal);
+    // console.log(`items still in cart ${cart}`);
+    res.status(200).send({ cart });
+  } catch (err) {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    error.msg;
+    return next(error);
   }
-  const result = await user.addToCart(product);
-  return res.status(200).send({ result });
+};
+
+exports.postIncItemQty = async (req, res, next) => {
+  try {
+    const user = await UserModel.findById(req.body.userId);
+    if (!user) {
+      return res.status(400).send({ msg: "No User found" });
+    }
+    const cart = await user.incItemQty(req.body.productId, req.body.price);
+    res.status(200).send({ cart });
+  } catch (err) {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    error.msg;
+    return next(error);
+  }
+};
+
+exports.postDecItemQty = async (req, res, next) => {
+  try {
+    const user = await UserModel.findById(req.body.userId);
+    if (!user) {
+      return res.status(400).send({ msg: "No User found" });
+    }
+    const cart = await user.decItemQty(req.body.productId, req.body.price);
+    res.status(200).send({ cart });
+  } catch (err) {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    error.msg;
+    return next(error);
+  }
 };
 
 // exports.getCheckOut = async (req, res, next) => {
@@ -109,18 +164,6 @@ exports.postAddToCart = async (req, res, next) => {
 //     req.user.clearCart();
 
 //     res.status(200).redirect("/orders");
-//   } catch (err) {
-//     const error = new Error(err);
-//     error.httpStatusCode = 500;
-//     error.msg;
-//     return next(error);
-//   }
-// };
-
-// exports.postItemCartDelete = async (req, res, next) => {
-//   try {
-//     await req.user.deleteFromCart(req.body.productId, req.body.subTotal);
-//     await res.status(200).redirect("/cart");
 //   } catch (err) {
 //     const error = new Error(err);
 //     error.httpStatusCode = 500;

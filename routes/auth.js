@@ -10,7 +10,6 @@ router.post("/auth/log-out", authController.postLogOut);
 
 router.post("/auth/register", authController.postRegister);
 
-
 // router.post("/auth/reset", authController.postReset);
 
 // router.get("/auth/password-reset/:token", authController.getPasswordReset);

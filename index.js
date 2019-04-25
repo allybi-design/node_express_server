@@ -59,13 +59,13 @@ const fileFilter = (req, file, cb) => {
 //Add Middleware
 app.use(bodyParser.json()); //.urlencoded({ extended: false })) <- in master branch
 
-// app.use(cors())
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET POST PUT PATCH DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+app.use(cors()) // either use Cors lib or set header manulayy below
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader("Access-Control-Allow-Methods", "GET POST PUT PATCH DELETE");
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   next();
+// });
 
 app.use(
   multer({
@@ -78,8 +78,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(morgan("dev"));
-
-
 
 //check isAuth
 // app.use(mW.setIsAuth);
@@ -97,6 +95,7 @@ app.use(morgan("dev"));
 // app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
+
 
 // app.get("/500", errorsController.get500);
 

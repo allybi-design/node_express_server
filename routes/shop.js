@@ -8,11 +8,15 @@ router.get("/products", shopController.getProducts);
 
 router.get("/product/:id", shopController.getProductById);
 
-router.post("/cart", shopController.postAddToCart);
+router.post("/addItemToCart", shopController.postAddItemToCart);
+
+router.post("/deleteItemInCart", shopController.postDeleteItemInCart);
+
+router.post("/incItemQty", shopController.postIncItemQty);
+
+router.post("/decItemQty", shopController.postDecItemQty);
 
 // router.get("/checkout", shopController.getCheckOut);
-
-// router.post("/delete-item", shopController.postItemCartDelete);
 
 // router.get("/orders", shopController.getOrders);
 

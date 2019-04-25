@@ -30,12 +30,22 @@ const userSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "Product"
           },
+          title: {
+            type: String
+          },
+          description: {
+            type: String
+          },
+          price: {
+            type: Number
+          },
           quantity: {
             type: Number
           }
         }
       ],
       totalPrice: {
+        default: 0,
         type: Number
       }
     }
@@ -47,11 +57,11 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.methods.addToCart = function(product) {
-  let price = product.price
+userSchema.methods.addItem = function(product) {
+  let price = product.price;
   let upDatedTotalPrice = 0;
-  let totalPrice = this.cart.totalPrice || 0
-  
+  let totalPrice = this.cart.totalPrice || 0;
+
   // is product in cart already??? return Index or -1
   const Index = this.cart.items.findIndex(item => {
     return String(item.productId) === String(product._id);
@@ -65,6 +75,9 @@ userSchema.methods.addToCart = function(product) {
     // NO - product NOT in cart
     updatedCartItems.push({
       productId: product._id,
+      title: product.title,
+      description: product.description,
+      price: product.price,
       quantity: 1
     });
   }
@@ -76,14 +89,53 @@ userSchema.methods.addToCart = function(product) {
   };
 
   this.save();
-  return this.cart
+  return this.cart;
+};
+
+userSchema.methods.deleteItem = function(productId, subTotal) {
+  const filteredItems = this.cart.items.filter(item => {
+    return String(item.productId) !== String(productId);
+  });
+
+  if (filteredItems.length) {
+    this.cart = {
+      items: [...filteredItems],
+      totalPrice: this.cart.totalPrice - subTotal
+    };
+  } else {
+    this.cart = {
+      items: [],
+      totalPrice: 0
+    };
+  }
+
+  this.save();
+  return this.cart;
+};
+
+userSchema.methods.incItemQty = function(productId, price) {
+  const Index = this.cart.items.findIndex(item => {
+    return String(item.productId) === String(productId);
+  });
+  this.cart.items[Index].quantity++;
+  this.cart.totalPrice += price;
+
+  this.save();
+  return this.cart;
+};
+
+userSchema.methods.decItemQty = function(productId, price) {
+  const Index = this.cart.items.findIndex(item => {
+    return String(item.productId) === String(productId);
+  });
+  this.cart.items[Index].quantity--;
+  this.cart.totalPrice -= price;
+
+  this.save();
+  return this.cart;
 };
 
 userSchema.methods.getCart = function() {
-  const itemIds = this.cart.items.map(item => {
-    return item.productId;
-  });
-  console.log(itemIds);
   return this.cart.itemIds
     .findById(this.cart.items.productId)
     .toArray()
@@ -97,25 +149,6 @@ userSchema.methods.getCart = function() {
         };
       });
     });
-};
-
-userSchema.methods.deleteFromCart = function(productId, subTotal) {
-  const filteredItems = this.cart.items.filter(item => {
-    return item.productId.toString() !== productId.toString();
-  });
-  if (filteredItems.length) {
-    this.cart = {
-      items: [...filteredItems],
-      totalPrice: this.cart.totalPrice - subTotal
-    };
-  } else {
-    this.cart = {
-      items: [],
-      totalPrice: 0
-    };
-  }
-
-  return this.save();
 };
 
 userSchema.methods.clearCart = function() {

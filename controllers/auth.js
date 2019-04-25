@@ -1,6 +1,7 @@
 require("dotenv").config();
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
+const auth0 = require("auth0");
 const salt = bcrypt.genSaltSync(10);
 const sgMail = require("@sendgrid/mail");
 
@@ -14,7 +15,7 @@ sgMail.setApiKey(process.env.SG_KEY);
 exports.postLogIn = async (req, res, next) => {
   const user = await UserModel.findOne({ email: req.body.email });
   if (!user) {
-    res.status(400).send({ msg: "NO User found" });
+    return res.status(400).send({ msg: "NO User found" });
   }
   // if YES user
   const matched = bcrypt.compare(req.body.password, user.password);
@@ -32,6 +33,7 @@ exports.postLogIn = async (req, res, next) => {
         id: user._id,
         name: user.name,
         isAuth: user.isLoggedIn,
+        picture: "/images/chaos.png"
       },
       cart: user.cart
     });
@@ -47,9 +49,9 @@ exports.postLogOut = async (req, res, next) => {
     return res.status(200).send({
       user: {
         id: "",
-        name: "",
+        name: "Sign up/Log In",
         isAuth: user.isLoggedIn,
-        isAdmin: false
+        picture: "/images/chaos.png"
       }
     });
   } else {
@@ -65,34 +67,37 @@ exports.postRegister = async (req, res, next) => {
   //     errors: errors.array()
   //   });
   // }
-  try {
-    const user = await new UserModel({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password
-      // password:req.body.pw
-    });
-    await user.save();
-    await sgMail.send({
-      to: req.body.email,
-      from: "admin@node-server-shop.com",
-      subject: "Confirmation of Sign up!",
-      html: `<h1>Congtrratulations</h1>                                              
-      <h3>Welcome ${
-        req.body.name
-      },\n onboard to NodeServerShop.com</h3>\n           
-      <h3>You are now signed up! - with your Email: ${
-        req.body.email
-      }</h3>\n         
-      <p>Thanks NSS</p>`
-    });
-    res.status(200).send({ msg: "user registered pklease log in" });
-  } catch (err) {
-    // if NO user ->try again👎
-    const error = new Error();
-    error.httpStatusCode = 500;
-    error.msg = "There was a problem ";
-    return res.status(400).send(error);
+  const isEmail = await UserModel.findOne({ eamil: req.body.email });
+  if (!isEmail) {
+    console.log("no Email exists");
+    try {
+      const user = new UserModel({
+        name: req.body.name,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, salt)
+      });
+      await user.save();
+      await sgMail.send({
+        to: req.body.email,
+        from: "admin@node-server-shop.com",
+        subject: "Confirmation of Sign up!",
+        html: `<h1>Congtratulations</h1>
+        <h3>Welcome ${
+          req.body.name
+        },\n onboard to NodeServerShop.com</h3>\n
+        <h3>You are now signed up! - with your Email: ${
+          req.body.email
+        }</h3>\n
+        <p>Thanks NSS</p>`
+      });
+      res.status(200).send({ msg: "user registered please log in" });
+    } catch (err) {
+      // if NO user ->try again👎
+      const error = new Error();
+      error.httpStatusCode = 500;
+      error.msg = "There was a problem ";
+      return res.status(400).send(error);
+    }
   }
 };
 
@@ -188,3 +193,18 @@ exports.postRegister = async (req, res, next) => {
 //     return next(error);
 //   }
 // };
+
+// // to go into register
+// await sgMail.send({
+//   to: req.body.email,
+//   from: "admin@node-server-shop.com",
+//   subject: "Confirmation of Sign up!",
+//   html: `<h1>Congtrratulations</h1>
+//   <h3>Welcome ${
+//     req.body.name
+//   },\n onboard to NodeServerShop.com</h3>\n
+//   <h3>You are now signed up! - with your Email: ${
+//     req.body.email
+//   }</h3>\n
+//   <p>Thanks NSS</p>`
+// });
