@@ -5,12 +5,12 @@ const path = require("path");
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const multer = require("multer");
 const morgan = require("morgan");
 const conFlash = require("connect-flash");
 const csrf = require("csurf");
 const mW = require("./middleware/mW");
-const UserModel = require("./models/user");
 const uuidv4 = require("uuid/v4");
 
 const PORT = process.env.PORT;
@@ -30,10 +30,11 @@ const errorsController = require("./controllers/error");
 const shopController = require("./controllers/shop");
 
 const app = express();
-const store = new MongoDBStore({
-  uri: process.env.DB_CONN,
-  collection: "sessions"
-});
+
+// const store = new MongoDBStore({
+//   uri: process.env.DB_CONN,
+//   collection: "sessions"
+// });
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -55,14 +56,17 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-app.set("view engine", "ejs");
-app.set("views", "views");
-app.set("view options", {
-  rmWhitespace: true
-});
-
 //Add Middleware
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); //.urlencoded({ extended: false })) <- in master branch
+
+app.use(cors()) // either use Cors lib or set header manulayy below
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader("Access-Control-Allow-Methods", "GET POST PUT PATCH DELETE");
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   next();
+// });
+
 app.use(
   multer({
     storage: fileStorage,
@@ -74,47 +78,36 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(morgan("dev"));
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
-    store
-  })
-);
-
-app.use(conFlash());
 
 //check isAuth
-app.use(mW.setIsAuth);
+// app.use(mW.setIsAuth);
 
-//check session
-app.use(mW.isSession);
+// check session
+// app.use(mW.isSession);
 
-app.post("/addorder", mW.isAuth, shopController.postAddOrder); //NB MUST CATCH BEFOR CSRF TRAP
+// app.post("/addorder", mW.isAuth, shopController.postAddOrder); //NB MUST CATCH BEFOR CSRF TRAP
 
 //set CSRF TOKEN
-app.use(csrf());
-app.use(mW.setCsrfToken);
+// app.use(csrf());
+// app.use(mW.setCsrfToken);
 
 //routes;
-app.use("/admin", adminRoutes);
+// app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
-app.get("/500", errorsController.get500);
 
-app.use(errorsController.get404);
+// app.get("/500", errorsController.get500);
 
-//express error handlers -> will look for all error thrown
+// app.use(errorsController.get404);
 
-app.use((error, req, res, next) => {
-  if (error instanceof multer.MulterError) {
-    console.log(`A Multer error occurred when uploading -> ${error}`);
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    const error = new Error(err)
+    error.msg `A Multer error occurred when uploading`
+    res.status(500).send({error});
   }
-  console.log(error);
-  req.error = error;
-  res.redirect("/500");
+  next()
 });
 
 // connection

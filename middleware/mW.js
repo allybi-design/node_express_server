@@ -41,55 +41,46 @@ exports.validateRegister = [
         }
       });
     }),
-  body("pw", "Password must be between 5 - 10 Charators")
-    .isLength({ min: 5, max: 10 })
+  body("password", "Password must exist")
     .trim()
     .isAlphanumeric(),
-  body("confirmPw")
-    .trim()
-    .custom((value, { req }) => {
-      if (value !== req.body.pw) {
-        throw new Error("Passwords do not matched");
-      }
-      return true;
-    }),
   (req, res, next) => {
     next();
   }
 ];
 
-exports.isAuth = (req, res, next) => {
-  if (!req.session.isLoggedIn) {
-    return res.redirect("/auth/log-in");
-  }
-  next();
-};
+// exports.isAuth = (req, res, next) => {
+//   if (!req.session.isLoggedIn) {
+//     return res.status(400).send({msg:"Not logged-in"}); //<- redirect if False
+//   }
+//   next();
+// };
 
-exports.isSession = (req, res, next) => {
-  if (!req.session.user) {
-    return next();
-  }
-  UserModel.findById(req.session.user._id)
-    .then(user => {
-      if (!user) {
-        return next();
-      }
-      req.user = user;
-      res.locals.userName = user.name;
-      next();
-    })
-    .catch(err => {
-      console.log("Failed Session Validation");
-      next(new Error(err));
-    });
-};
+// exports.isSession = (req, res, next) => {
+//   if (!req.session.user) {
+//     return next(); //<- if NOT sesssion.user NEXT
+//   }
+//   UserModel.findById(req.session.user._id)
+//     .then(user => {
+//       if (!user) {
+//         return next();
+//       }
+//       req.user = user;
+//       res.locals.userName = user.name;
+//       next();
+//     })
+//     .catch(err => {
+//       console.log("Failed Session Validation");
+//       next(new Error(err));
+//     });
+// };
 
-exports.setIsAuth = (req, res, next) => {
-  res.locals.isAuth = req.session.isLoggedIn;
-  next();
-};
+// exports.setIsAuth = (req, res, next) => {
+//   res.locals.isAuth = req.session.isLoggedIn;
+//   next();
+// };
 
-exports.setCsrfToken = (req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
-  next();
-};
+// exports.setCsrfToken = (req, res, next) => {
+//   res.locals.csrfToken = req.csrfToken();
+//   next();
+// };

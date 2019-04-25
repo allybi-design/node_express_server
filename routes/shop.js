@@ -4,21 +4,22 @@ const router = express.Router();
 const shopController = require("../controllers/shop");
 const mW = require("../middleware/mW");
 
-router.get("/", shopController.getIndex);
-
 router.get("/products", shopController.getProducts);
 
-router.get("/products/:_id", shopController.getProductById);
+router.get("/product/:id", shopController.getProductById);
 
-router.get("/cart", mW.isAuth, shopController.getCart);
-router.post("/cart", mW.isAuth, shopController.postCart);
+router.post("/addItemToCart", shopController.postAddItemToCart);
 
-router.get("/checkout", mW.isAuth, shopController.getCheckOut);
+router.post("/deleteItemInCart", shopController.postDeleteItemInCart);
 
-router.post("/delete-item", mW.isAuth, shopController.postItemCartDelete);
+router.post("/incItemQty", shopController.postIncItemQty);
 
-router.get("/orders", mW.isAuth, shopController.getOrders);
+router.post("/decItemQty", shopController.postDecItemQty);
 
-router.get("/invoice/:orderId", shopController.getInvoice);
+// router.get("/checkout", shopController.getCheckOut);
+
+// router.get("/orders", shopController.getOrders);
+
+// router.get("/invoice/:orderId", shopController.getInvoice);
 
 module.exports = router;
